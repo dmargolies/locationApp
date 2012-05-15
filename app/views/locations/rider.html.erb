@@ -1,0 +1,75 @@
+<script type="text/javascript">
+
+//navigator.geolocation.getCurrentPosition(GetLocation, fail, {enableHighAccuracy:true});
+navigator.geolocation.watchPosition(GetLocation, fail, {enableHighAccuracy:true});
+var numRequestsSents=0;
+
+function GetLocation(location) {
+
+    var longitude = location.coords.longitude;
+    var latitude = location.coords.latitude;
+    var accuracy = location.coords.accuracy;
+    var currentTime = new Date();
+    var secs = currentTime.getSeconds();
+    var mins = currentTime.getMinutes();
+    var hrs = currentTime.getHours();
+    document.getElementById('latitude').innerHTML = 'Latitude: ' + latitude;
+    document.getElementById('longitude').innerHTML = 'Longitude: ' + longitude;
+    document.getElementById('accuracy').innerHTML = 'Accuracy: ' + accuracy;
+    document.getElementById('current_time').innerHTML = 'Time last updated: ' + hrs + ":"+mins+":"+secs;
+    //document.getElementById('current_time').innerHTML='hello world';
+    //alert("latitude: " + latitude + "\nlongitude: " + longitude);
+    
+    var data = {
+        location:{
+            "details": "hello world",
+            //accuracy: accuracy,
+            "latitude": latitude, 
+            "longitude": longitude
+        }
+    
+    }
+    
+    var url = "/vehicles/<%=@vehicle.id%>/locations/create";
+    var params = JSON.stringify(data);
+    //alert("params = " + params);
+    var xmlHttp = null;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("POST", url, true);
+
+    //Send the proper header information along with the request
+    xmlHttp.setRequestHeader("Content-type", "application/json");
+    //xmlHttp.setRequestHeader("Content-length", params.length);
+    //xmlHttp.setRequestHeader("Connection", "close");
+
+    xmlHttp.onreadystatechange = function() {//Call a function when the state changes.
+	    if(xmlHttp.readyState == 4 && xmlHttp.status == 200) {
+	    	//alert(xmlHttp.responseText);
+	    	//alert('data was sent');
+	    }
+    }
+    
+    xmlHttp.send(params);
+    numRequestsSents = numRequestsSents + 1;
+    document.getElementById('num_sent').innerHTML = 'Messages: ' + numRequestsSents;    
+}
+function fail() {
+    alert('failed');
+}
+</script>
+<h1>New location</h1>
+<div id="location_info">
+  <p id = "latitude">Latitude: unknown</p>
+  <p id = "longitude">Longitude: unknown</p>
+  <p id = "accuracy"> Accuracy: unknown</p>
+  <p id = "current_time">Time last updated: unknown</p>
+  <p id = "num_sent">Messages Sent: 0 </p>
+</div>
+<p>
+  Data will appear as unknown if the current location data has not yet been POSTed to the server.
+  This will occur if the browser determines that it does not need to update the server with the
+  current location.
+</p>
+<!--<%= render 'form' %> -->
+
+<%= link_to 'Back', vehicles_path %>

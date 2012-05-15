@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+  <style type="text/css">
+    html { height: 100% }
+    body { height: 100%; margin: 0; padding: 0 }
+
+  </style>
+  <script type="text/javascript"
+    src="http://maps.googleapis.com/maps/api/js?sensor=false">
+  </script>
+
+  <title>iTrav</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+
+<body onload="start()">
+    
+<!--<h1>Map_View</h1>-->
+<div class="container-fluid">
+    <!-- Main navigation fixed on top -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="#">
+              iTrav
+            </a>
+        
+            <ul class="nav">
+              <li class="<%=(@vehicle.nil?)?("active"):()%>">
+                <a href="<%= root_url%>">Home</a>
+              </li>
+              <% @vehicles.each do |vehicle| %>
+                <% if @vehicle %> <!--#if not null -->
+                    <li class ="<%= (vehicle == @vehicle) ? ("active"):() %>"><%= link_to vehicle.name, vehicle_path(vehicle) %></li>
+                <% else %>
+                    <li><%= link_to vehicle.name, vehicle_path(vehicle) %></li>
+                <% end %>
+              <% end %>
+            </ul>
+        
+            <ul class="nav pull-right">
+              <li class="dropdown">
+                <a href="#"
+                      class="dropdown-toggle"
+                      data-toggle="dropdown">
+                      aDropDownMenu
+                      <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Sign out</a></li>
+                    <li><a href="#">Account Preferences</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">Something</a></li>
+                    <li><a href="#">Something Else</a></li>
+                </ul>
+              </li>
+            </ul>
+        </div>
+      </div>
+    </div>
+    
+    <% flash.each do |key, value| %>
+        <div class="alert alert-block alert-<%= key == :notice ? "success" : key %>" data-dismiss="alert">
+          <a class="close">×</a>
+          <h4 class="alert-heading"><%= key.capitalize %>:</h4>
+          <%= value %>
+        </div>
+    <% end %>
+    
+    <!--<h1>Title</h1>-->
+    <div class="row">
+        <div class="span3">
+            <ul class="nav nav-list">
+                <li class="nav-header"><%=@vehicle.name %></li>
+                <li><a href="#"><i class="icon-home"></i> Map (Show)</a></li>
+                <%= left_tab_bus_item 'Map (Show)', vehicle_path(@vehicle) %>
+                <%= left_tab_bus_item 'Past Locations', '#' %>
+                <%= left_tab_bus_item 'New (single)', new_vehicle_location_path(@vehicle) %>
+                <%= left_tab_bus_item 'Rider (continuous)', '/vehicles/'+@vehicle.id.to_s+'/locations/rider' %> <!-- not the "rails" way -->
+               
+                <!--prefix icon with 'icon-white' when active -->
+                <!--<li class ="active"><a href="#"><i class="icon-white icon-book"></i> Past Locations</a></li> -->
+                <li><a href="#"><i class="icon-pencil"></i> New (single)</a></li>
+                <li><a href="#"><i class="icon-pencil"></i> Rider (continuous)</a></li>
+                <li class="nav-header">Another list header</li>
+                <li><a href="#"><i class="icon-user"></i> Profile</a></li>
+                <li><a href="#"><i class="icon-cog"></i> Settings</a></li>
+                <li><a href="#"><i class="icon-flag"></i> Help</a></li>
+            </ul>
+        </div>
+    
+        
+        <div class="span9">
+            <%= yield :head%>
+            <div id="map_canvas" style="width:800px; height:800px" ></div>
+            <%= yield %>
+        </div>
+    </div>  
+
+</div>    
+</body>
+  <script type = "text/javascript">
+    function start(){
+      <% if @vehicle.location==nil %>
+        document.getElementById("map_canvas").innerHTML = "<h1>Please add some data w/ new or rider</h1><p>You must refresh the page when locations are added";
+      <% else %>
+        map(<%=@vehicle.location.latitude%>, <%=@vehicle.location.longitude%>, <%=@vehicle.id%>);
+      
+      <%end%>
+    }  
+    /***jquery****/
+    var h = $(window).height();
+    var offsetTop = 0.25*h; // Calculate the top offset
+    var w = $(window).width();
+    var offsetSide = 0.25*2
+    $('#map_canvas').css('height', (h - offsetTop));
+    $('#map-canvas').css('width'), (w-offsetSide);
+    
+    $(document).ready(function () {
+      $(window).resize(function () {
+        var h = $(window).height();
+        var offsetTop = 0.25*h; // Calculate the top offset
+        var w = $(window).width();
+        var offsetSide = 0.25*2
+        $('#map_canvas').css('height', (h - offsetTop));
+        $('#map-canvas').css('width'), (w-offsetSide);
+       }).resize();
+    });
+
+
+  
+
+    </script>
+</html>

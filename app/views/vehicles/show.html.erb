@@ -1,0 +1,53 @@
+<% content_for :head do %>
+<p id="notice"><%= notice %></p>
+
+<h1><%= @vehicle.name %></h1>
+<p>
+  <b>Name:</b>
+  <%= @vehicle.name %>
+</p>
+
+<p>
+  <b>Route:</b>
+  <%= @vehicle.route %>
+</p>
+
+<p>
+  <b>Details:</b>
+  <%= @vehicle.details %>
+</p>
+<p>
+    <div id = "current_latitude"><b>Current Latitude: </b>Loading</div>
+</p>
+<p>
+   <div id="current_longitude"><b>Current Longitude: </b>Loading</div>
+</p>
+<p>
+    <div id="created_at"><b>Created At: </b> Loading</div>
+</p>
+<% end %>
+<h2>Locations</h2>
+<% @vehicle.locations.each do |location| %>
+  <p>
+    <b>Longitude:</b>
+    <%= location.longitude %>
+  </p>
+ 
+  <p>
+    <b>Latitude:</b>
+    <%= location.latitude %>
+  </p>
+  
+  <p>
+    <b>Details:</b>
+    <%= location.details %>
+  </p>
+  <p>
+    <b>Created At:</b>
+    <%= location.created_at %>
+  </p>
+<% end %>
+ 
+
+<%= link_to 'Edit', edit_vehicle_path(@vehicle) %> |
+<%= link_to 'Back', vehicles_path %>

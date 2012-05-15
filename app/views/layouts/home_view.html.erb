@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>iTrav</title>
+  <%= stylesheet_link_tag    "application", :media => "all" %>
+  <%= javascript_include_tag "application" %>
+  <%= csrf_meta_tags %>
+</head>
+
+
+
+
+<body>
+<div class="container-fluid">
+    <!-- Main navigation fixed on top -->
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+            <a class="brand" href="#">
+              iTrav
+            </a>
+        
+            <ul class="nav">
+              <li class="<%=(@vehicle.nil?)?("active"):()%>">
+                <a href="<%= root_url%>">Home</a>
+              </li>
+              <% @vehicles.each do |vehicle| %>
+                <% if @vehicle %> <!--#if not null -->
+                    <li class ="<%= (vehicle.location == @vehicle.location) ? ("active"):() %>"><%= link_to vehicle.name, vehicle_path(vehicle) %></li>
+                <% else %>
+                    <li><%= link_to vehicle.name, vehicle_path(vehicle) %></li>
+                <% end %>
+              <% end %>
+            </ul>
+        
+            <ul class="nav pull-right">
+              <li class="dropdown">
+                <a href="#"
+                      class="dropdown-toggle"
+                      data-toggle="dropdown">
+                      aDropDownMenu
+                      <b class="caret"></b>
+                </a>
+                <ul class="dropdown-menu">
+                    <li><a href="#">Sign out</a></li>
+                    <li><a href="#">Account Preferences</a></li>
+                    <li class="divider"></li>
+                    <li><a href="#">Something</a></li>
+                    <li><a href="#">Something Else</a></li>
+                </ul>
+              </li>
+            </ul>
+        </div>
+      </div>
+    </div>
+    
+    <% flash.each do |key, value| %>
+        <div class="alert alert-block alert-<%= key == :notice ? "success" : key %>" data-dismiss="alert">
+          <a class="close">×</a>
+          <h4 class="alert-heading"><%= key.capitalize %>:</h4>
+          <%= value %>
+        </div>
+    <% end %>
+    
+    <!--<h1>Title</h1>-->
+    <div class="row">
+        <div class="span3">
+            <ul class="nav nav-list">
+                <li class="nav-header">Bueses</li>
+                <% @vehicles.each do |vehicle| %>
+                    <li><a href="#"><i class="icon-home"></i><%=vehicle.name%></a></li>
+                <% end %>
+                <li class="active"><a href="#"><i class="icon-white icon-home"></i> Map (Show)</a></li>
+                <li><a href="#"><i class="icon-book"></i> Past Locations</a></li>
+                <li><a href="#"><i class="icon-pencil"></i> New (single)</a></li>
+                <li><a href="#"><i class="icon-pencil"></i> Rider (continuous)</a></li>
+                <li class="nav-header">Another list header</li>
+                <li><a href="#"><i class="icon-user"></i> Profile</a></li>
+                <li><a href="#"><i class="icon-cog"></i> Settings</a></li>
+                <li><a href="#"><i class="icon-flag"></i> Help</a></li>
+            </ul>
+        </div>
+    
+
+        <div class="span9">
+            <%= yield %>
+        </div>
+    </div>  
+
+</div>    
+</body>
+</html>

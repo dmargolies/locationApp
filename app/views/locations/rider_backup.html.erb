@@ -1,0 +1,43 @@
+<script type="text/javascript">
+alert('hi')
+navigator.geolocation.getCurrentPosition(GetLocation);
+function GetLocation(location) {
+    //alert(location.coords.latitude);
+    //alert(location.coords.longitude);
+    //alert(location.coords.accuracy);
+    var longitude = location.coords.longitude;
+    var latitude = location.coords.latitude;
+    var accuracy = location.coords.accuracy;
+    var data = {
+        location:{
+            details: "hello world",
+            //accuracy: accuracy,
+            latitude: latitude, 
+            longitude: longitude
+        }
+    
+    }
+    //send location
+    //need a controller to fill in vehicle id
+    requestNumber = JSONRequest.post(
+    "http://0.0.0.0:3000/vehicles/1/locations/rider", 
+    data, 
+    function (requestNumber, value, exception) {
+        alert('hi')
+        if (value) {
+            //processResponse(value);
+            alert('pass')
+        } else {
+            //processError(exception);
+            alert('fail')
+        }
+    }
+); 
+
+}
+</script>
+<h1>New location</h1>
+
+<%= render 'form' %>
+
+<%= link_to 'Back', vehicles_path %>
