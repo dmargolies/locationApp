@@ -1,7 +1,7 @@
 <script type="text/javascript">
 navigator.geolocation.getCurrentPosition(GetLocation, null, {enableHighAccuracy:true});
 function GetLocation(location) {
-    //alert(location.coords.latitude);
+    alert(location.coords.latitude);
     //alert(location.coords.longitude);
     //alert(location.coords.accuracy);
     document.getElementById('location_longitude').value = location.coords.longitude;
